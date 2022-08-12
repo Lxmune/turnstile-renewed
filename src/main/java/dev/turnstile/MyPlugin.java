@@ -7,11 +7,14 @@ public class MyPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().log(Level.INFO, "{0}.onEnable()", this.getClass().getName());
+        getLogger().log(Level.INFO, "The plugin has been enabled. Reminder that this plugin is still in development, so there might be unexpected bugs.");
+
+        // Registering the command executor
+        this.getCommand("turnstile").setExecutor(new TurnstileCommand());
     }
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "{0}.onDisable()", this.getClass().getName());
+        getLogger().log(Level.INFO, "The plugin has been disabled. Goodbye!");
     }
 }

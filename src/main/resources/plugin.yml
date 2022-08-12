@@ -1,4 +1,9 @@
-name: turnstile
+name: Turnstile
 version: "1.0-SNAPSHOT"
 author: Your Name
 main: dev.turnstile.MyPlugin
+commands:
+  turnstile:
+    description: Desc
+    usage: /<command>
+    permission: turnstile.use
