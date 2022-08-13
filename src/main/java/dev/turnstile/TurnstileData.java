@@ -12,5 +12,5 @@ public class TurnstileData {
     
     public boolean isClosed;
 
-    public Coords coords;
+    Coords coords = new Coords();
 }

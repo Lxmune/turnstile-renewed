@@ -1,18 +1,14 @@
 package dev.turnstile;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.Action;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 
 public class TurnstileCommand implements CommandExecutor {
@@ -31,10 +27,10 @@ public class TurnstileCommand implements CommandExecutor {
             {
                 // Turnstile Creation
 
-                MyPlugin myplugin = new MyPlugin();
-                List<TurnstileData> stored_data = myplugin.GetData();
+                List<TurnstileData> stored_data = MyPlugin.GetData();
 
                 TurnstileData new_data = new TurnstileData();
+
                 new_data.coords.x = block.getX();
                 new_data.coords.y = block.getY();
                 new_data.coords.z = block.getZ();
@@ -42,6 +38,8 @@ public class TurnstileCommand implements CommandExecutor {
                 new_data.id = stored_data.size() + 1;
 
                 stored_data.add(new_data);
+
+                player.sendMessage("Turnstile created with ID: " + new_data.id + " at position " + new_data.coords.x + " " + new_data.coords.y + " " + new_data.coords.z);
             }
             else
             {
@@ -52,19 +50,6 @@ public class TurnstileCommand implements CommandExecutor {
         return true;
     }
 
-    @EventHandler
-    public void onEvent(final PlayerInteractEvent event) {
-        final Player p = event.getPlayer();
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (getTypes().contains(event.getClickedBlock().getType())) {
-                if (event.getItem() == null) {
-                    event.getClickedBlock().setType(Material.AIR);
-                }
-            }
-        }
-    }
-
-    
 
     public boolean getHelp(CommandSender sender)
     {
@@ -76,7 +61,7 @@ public class TurnstileCommand implements CommandExecutor {
     }
 
 
-    public List<Material> getTypes()
+    public static List<Material> getTypes()
     {
         List<Material> types = Arrays.asList(
         Material.OAK_FENCE, 

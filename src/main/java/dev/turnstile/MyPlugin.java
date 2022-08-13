@@ -10,15 +10,18 @@ public class MyPlugin extends JavaPlugin {
     public void onEnable() {
         // Init
         getLogger().log(Level.INFO, "The plugin has been enabled. Reminder that this plugin is still in development, so there might be unexpected bugs.");
-
+        
         // Registering the command executor
         this.getCommand("turnstile").setExecutor(new TurnstileCommand());
+
+        // Registering the event listener
+        this.getServer().getPluginManager().registerEvents(new TurnstileEvent(), this);
     }
 
     // Creating the fence var (list of fence blocks)
-    List<TurnstileData> stored_data = new ArrayList<>();
+    static List<TurnstileData> stored_data = new ArrayList<>();
     
-    public List<TurnstileData> GetData() {
+    public static List<TurnstileData> GetData() {
         return stored_data;
     }
 
