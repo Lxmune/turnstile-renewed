@@ -59,10 +59,10 @@ public class TurnstileEvent implements Listener {
                             cooldown.put(event.getPlayer().getUniqueId(), cooldown_time + "");
 
                             final Material temp_block = block.getType();
-                            
+
                             block.setType(Material.AIR);
 
-                            Bukkit.getScheduler().runTaskAsynchronously(main, new Runnable() {
+                            Bukkit.getScheduler().runTaskAsynchronously(Bukkit, new Runnable() {
                                 @Override
                                 public void run() {
                                     Bukkit.getLogger().info("This message was printed to the console asynchronously");
