@@ -3,6 +3,7 @@ package dev.turnstile;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 import java.time.LocalTime;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
@@ -60,6 +62,14 @@ public class TurnstileEvent implements Listener {
                             
                             block.setType(Material.AIR);
 
+                            Bukkit.getScheduler().runTaskAsynchronously(main, new Runnable() {
+                                @Override
+                                public void run() {
+                                    Bukkit.getLogger().info("This message was printed to the console asynchronously");
+                                    //Bukkit.broadcastMessage is not thread-safe
+                                }
+                            });
+
                             Thread t = new Thread(new Runnable() {
                                 public void run() {
                                     try {
@@ -73,11 +83,11 @@ public class TurnstileEvent implements Listener {
 
                             t.start();
 
-                            class CloseDoor implements Runnable {
+                            /*class CloseDoor implements Runnable {
                                 public void run() {
                                     block.setType(temp_block);
                                 }
-                            }
+                            }*/
 
                             event.getPlayer().sendMessage("Turnstile opened.");
                         }
