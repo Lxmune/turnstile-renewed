@@ -46,7 +46,7 @@ public class TurnstileEvent implements Listener {
 
                 // Turnstile Check (exists?)
 
-                List<TurnstileData> stored_data = MyPlugin.GetData();
+                List<TurnstileData> stored_data = TurnstileRenewed.GetData();
 
                 for (TurnstileData data : stored_data) {
                     if (data.coords.x == x && data.coords.y == y && data.coords.z == z) {
@@ -64,7 +64,7 @@ public class TurnstileEvent implements Listener {
 
                             // Check if the player got the money
 
-                            if (MyPlugin.economy.getBalance(event.getPlayer().getName()) < data.price) {
+                            if (TurnstileRenewed.economy.getBalance(event.getPlayer().getName()) < data.price) {
                                 event.getPlayer().sendMessage("§6You don't have enough money to use this turnstile.");
                                 return;
                             }
@@ -84,7 +84,7 @@ public class TurnstileEvent implements Listener {
                                 }
                             }
 
-                            Bukkit.getScheduler().runTaskAsynchronously(MyPlugin.plugin, new Runnable() {
+                            Bukkit.getScheduler().runTaskAsynchronously(TurnstileRenewed.plugin, new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -93,7 +93,7 @@ public class TurnstileEvent implements Listener {
                                         cooldown.remove(event.getPlayer().getUniqueId());
 
                                         CloseTurnstile close = new CloseTurnstile();
-                                        Bukkit.getScheduler().runTask(MyPlugin.plugin, close);
+                                        Bukkit.getScheduler().runTask(TurnstileRenewed.plugin, close);
 
                                     } catch(InterruptedException e) {
                                         System.out.println("Interrupted.");
@@ -101,10 +101,10 @@ public class TurnstileEvent implements Listener {
                                 }
                             });
 
-                            event.getPlayer().sendMessage("§aThe turnstile is open.\n§fYour account got charged §a" + data.price + " " + MyPlugin.economy.currencyNamePlural() + "§f.");
+                            event.getPlayer().sendMessage("§aThe turnstile is open.\n§fYour account got charged §a" + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
 
-                            MyPlugin.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);
-                            MyPlugin.economy.depositPlayer("tom2090", data.price);
+                            TurnstileRenewed.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);
+                            TurnstileRenewed.economy.depositPlayer("tom2090", data.price);
                         }
                     }
                 }
@@ -115,8 +115,8 @@ public class TurnstileEvent implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (TurnstileCommand.getTypes().contains(event.getBlock().getType())) {
-            for (int i = 0; i < MyPlugin.GetData().size(); i++) {
-                if (MyPlugin.GetData().get(i).coords.x == event.getBlock().getX() && MyPlugin.GetData().get(i).coords.y == event.getBlock().getY() && MyPlugin.GetData().get(i).coords.z == event.getBlock().getZ()) {
+            for (int i = 0; i < TurnstileRenewed.GetData().size(); i++) {
+                if (TurnstileRenewed.GetData().get(i).coords.x == event.getBlock().getX() && TurnstileRenewed.GetData().get(i).coords.y == event.getBlock().getY() && TurnstileRenewed.GetData().get(i).coords.z == event.getBlock().getZ()) {
                     event.setCancelled(true);
                     event.getPlayer().sendMessage("§cYou can't break this turnstile.");
                 }
@@ -128,8 +128,8 @@ public class TurnstileEvent implements Listener {
     public void onBlockNaturalBreak(BlockIgniteEvent event)
     {
         if (TurnstileCommand.getTypes().contains(event.getBlock().getType())) {
-            for (int i = 0; i < MyPlugin.GetData().size(); i++) {
-                if (MyPlugin.GetData().get(i).coords.x == event.getBlock().getX() && MyPlugin.GetData().get(i).coords.y == event.getBlock().getY() && MyPlugin.GetData().get(i).coords.z == event.getBlock().getZ()) {
+            for (int i = 0; i < TurnstileRenewed.GetData().size(); i++) {
+                if (TurnstileRenewed.GetData().get(i).coords.x == event.getBlock().getX() && TurnstileRenewed.GetData().get(i).coords.y == event.getBlock().getY() && TurnstileRenewed.GetData().get(i).coords.z == event.getBlock().getZ()) {
                     event.setCancelled(true);
                 }
             }

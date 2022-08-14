@@ -40,11 +40,16 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
                 
+                if (!player.hasPermission("turnstile.create")) { 
+                    player.sendMessage("§cYou don't have access to this command.");
+                    return true;
+                }
+
                 if (getTypes().contains(block.getType()))
                 {
                     // Turnstile Creation
     
-                    List<TurnstileData> stored_data = MyPlugin.GetData();
+                    List<TurnstileData> stored_data = TurnstileRenewed.GetData();
     
                     TurnstileData new_data = new TurnstileData();
     
@@ -69,8 +74,8 @@ public class TurnstileCommand implements CommandExecutor {
 
                     // Search for the nearest available ID
                     else {
-                        new_data.id = MyPlugin.config.getInt("next_id");
-                        MyPlugin.config.set("next_id", new_data.id + 1);
+                        new_data.id = TurnstileRenewed.config.getInt("next_id");
+                        TurnstileRenewed.config.set("next_id", new_data.id + 1);
                     }
     
                     stored_data.add(new_data);
@@ -95,12 +100,18 @@ public class TurnstileCommand implements CommandExecutor {
             {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!player.hasPermission("turnstile.remove")) { 
+                    player.sendMessage("§cYou don't have access to this command.");
+                    return true;
+                }
+
                 
                 if (getTypes().contains(block.getType()))
                 {
                     // Turnstile Creation
     
-                    List<TurnstileData> stored_data = MyPlugin.GetData();
+                    List<TurnstileData> stored_data = TurnstileRenewed.GetData();
     
                     TurnstileData new_data = new TurnstileData();
     
@@ -141,12 +152,18 @@ public class TurnstileCommand implements CommandExecutor {
             {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!player.hasPermission("turnstile.price")) { 
+                    player.sendMessage("§cYou don't have access to this command.");
+                    return true;
+                }
+
                 
                 if (getTypes().contains(block.getType()))
                 {
                     // Turnstile Creation
     
-                    List<TurnstileData> stored_data = MyPlugin.GetData();
+                    List<TurnstileData> stored_data = TurnstileRenewed.GetData();
     
                     TurnstileData new_data = new TurnstileData();
     
@@ -215,7 +232,6 @@ public class TurnstileCommand implements CommandExecutor {
     {
         sender.sendMessage("§b/turnstile help §7- §fDisplay this help");
         sender.sendMessage("§b/turnstile info §7- §fDisplay information about the plugin");
-        sender.sendMessage("§b/turnstile reload §7- §fReload the plugin");
         sender.sendMessage("§b/turnstile create §7- §fCreate a turnstile at your target block");
         sender.sendMessage("§b/turnstile remove §7- §fRemove a turnstile at your target block");
         sender.sendMessage("§b/turnstile price §7- §fSet the price of a turnstile at your target block");
@@ -225,8 +241,8 @@ public class TurnstileCommand implements CommandExecutor {
     public boolean getInfo(CommandSender sender)
     {
         sender.sendMessage("§bTurnstile §7- §fA plugin for turning fences into turnstiles.");
-        sender.sendMessage("§bVersion §7- §f" + MyPlugin.plugin.getDescription().getVersion());
-        sender.sendMessage("§bAuthor §7- §f" + MyPlugin.plugin.getDescription().getAuthors().toString());
+        sender.sendMessage("§bVersion §7- §f" + TurnstileRenewed.plugin.getDescription().getVersion());
+        sender.sendMessage("§bAuthor §7- §f" + TurnstileRenewed.plugin.getDescription().getAuthors().toString());
         return true;
     }
 

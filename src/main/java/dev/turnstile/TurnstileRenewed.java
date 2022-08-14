@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.milkbowl.vault.economy.Economy;
 
-public class MyPlugin extends JavaPlugin {
+public class TurnstileRenewed extends JavaPlugin {
 
     public static Plugin plugin = null;
 
@@ -43,7 +43,7 @@ public class MyPlugin extends JavaPlugin {
         }
 
         // Initializing the data
-        config = MyPlugin.plugin.getConfig();
+        config = TurnstileRenewed.plugin.getConfig();
 
         // Initializing the config
         config.addDefault("next_id", 0);
