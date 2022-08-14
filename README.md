@@ -13,8 +13,8 @@ Feel free to contribute to the project by reporting issues and suggesting stuff.
 - An <b>economy</b> plugin compatible with Vault
 
 <b>Commands & Permissions:</b>
-- <b>/turnstile help</b>: See all the commands. (turnstile.help)
-- <b>/turnstile info</b>: See information about the plugin. (turnstile.info)
-- <b>/turnstile create</b>: Create a turnstile. (turnstile.create)
-- <b>/turnstile remove</b>: Remove a turnstile. (turnstile.remove)
-- <b>/turnstile price</b>: Modify the price of a turnstile. (turnstile.price)
+- <b>/turnstile help</b>: See all the commands. <b>P: turnstile.help</b>
+- <b>/turnstile info</b>: See information about the plugin. <b>P: turnstile.info</b>
+- <b>/turnstile create</b>: Create a turnstile. <b>P: turnstile.create</b>
+- <b>/turnstile remove</b>: Remove a turnstile. <b>P: turnstile.remove</b>
+- <b>/turnstile price</b>: Modify the price of a turnstile. <b>P: turnstile.price</b>
