@@ -58,7 +58,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <configuration>
                     <tasks>
-                        <copy file="target/turnstile-1.0-SNAPSHOT.jar" todir="/home/tom/Documents/Dev MC Server/plugins"/>
+                        <copy file="target/turnstile-1.0.jar" todir="/home/tom/Documents/Dev MC Server/plugins"/>
                     </tasks>
                 </configuration>
                 <executions>
