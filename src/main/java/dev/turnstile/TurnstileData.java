@@ -1,16 +1,20 @@
 package dev.turnstile;
 
+import org.bukkit.Material;
+
 public class TurnstileData {
+
+    public long id;
+
+    public Material material;
+
+    public int price = 1;
 
     public class Coords {
         public int x;
         public int y;
         public int z;
     }
-
-    public int id;
-    
-    public boolean isClosed;
 
     Coords coords = new Coords();
 }
