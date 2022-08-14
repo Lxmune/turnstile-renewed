@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +16,8 @@ public class MyPlugin extends JavaPlugin {
     public static Plugin plugin = null;
 
     public static Economy economy;
+
+    public static FileConfiguration config;
 
     // Creating the fence var (list of fence blocks)
     static List<TurnstileData> stored_data = new ArrayList<>();
@@ -40,6 +43,11 @@ public class MyPlugin extends JavaPlugin {
         }
 
         // Initializing the data
+        config = MyPlugin.plugin.getConfig();
+
+        // Initializing the config
+        config.addDefault("next_id", 0);
+
         stored_data = TurnstileSave.DataInit();
 
         if (stored_data == null) {

@@ -32,7 +32,7 @@ public class TurnstileEvent implements Listener {
 
         // TURNSTILE INTERACTION
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND && event.getItem() == null) {
 
             event.setCancelled(true);
 
@@ -43,8 +43,6 @@ public class TurnstileEvent implements Listener {
                 int x = block.getX();
                 int y = block.getY();
                 int z = block.getZ();
-
-                System.out.println("2");
 
                 // Turnstile Check (exists?)
 
@@ -57,7 +55,6 @@ public class TurnstileEvent implements Listener {
                                 cooldown.remove(event.getPlayer().getUniqueId());
                             }
                             else {
-                                System.out.println("Cooldown");
                                 event.getPlayer().sendMessage("§fYou must wait §c" + LocalTime.now().until(cooldown.get(event.getPlayer().getUniqueId()), SECONDS)+ " seconds §fbefore you can use this turnstile again.");
                                 return;
                             }
@@ -67,7 +64,7 @@ public class TurnstileEvent implements Listener {
 
                             // Check if the player got the money
 
-                            if (MyPlugin.economy.getBalance(event.getPlayer().getName()) < 0.5) {
+                            if (MyPlugin.economy.getBalance(event.getPlayer().getName()) < data.price) {
                                 event.getPlayer().sendMessage("§6You don't have enough money to use this turnstile.");
                                 return;
                             }
@@ -104,10 +101,10 @@ public class TurnstileEvent implements Listener {
                                 }
                             });
 
-                            event.getPlayer().sendMessage("§aThe turnstile is open.\n§fYour account got charged 0.5 §a" + MyPlugin.economy.currencyNamePlural() + "§f.");
+                            event.getPlayer().sendMessage("§aThe turnstile is open.\n§fYour account got charged §a" + data.price + " " + MyPlugin.economy.currencyNamePlural() + "§f.");
 
-                            MyPlugin.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), 0.5);
-                            MyPlugin.economy.depositPlayer("tom2090", 0.5);
+                            MyPlugin.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);
+                            MyPlugin.economy.depositPlayer("tom2090", data.price);
                         }
                     }
                 }

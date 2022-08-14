@@ -10,6 +10,8 @@ public class TurnstileData {
 
     public int price = 1;
 
+    public String world;
+
     public class Coords {
         public int x;
         public int y;

@@ -1,53 +1,67 @@
 package dev.turnstile;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.util.List;
 
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 
 
 public class TurnstileSave {
 
-    static FileConfiguration config = MyPlugin.plugin.getConfig(); 
-
     public static boolean Save(TurnstileData data) {
 
-        config.set("turnstiles." + data.id + ".material", data.material.toString());
-        config.set("turnstiles." + data.id + ".price", data.price);
-        config.set("turnstiles." + data.id + ".coords.x", data.coords.x);
-        config.set("turnstiles." + data.id + ".coords.y", data.coords.y);
-        config.set("turnstiles." + data.id + ".coords.z", data.coords.z);
+        MyPlugin.config.set("turnstiles." + data.id + ".material", data.material.toString());
+        MyPlugin.config.set("turnstiles." + data.id + ".price", data.price);
+        MyPlugin.config.set("turnstiles." + data.id + ".coords.x", data.coords.x);
+        MyPlugin.config.set("turnstiles." + data.id + ".coords.y", data.coords.y);
+        MyPlugin.config.set("turnstiles." + data.id + ".coords.z", data.coords.z);
+        MyPlugin.config.set("turnstiles." + data.id + ".world", data.world);
 
         MyPlugin.plugin.saveConfig();
 
         return true;
     }
 
+    public static boolean Remove(TurnstileData data) {
+
+            MyPlugin.GetData().remove(data);
+            MyPlugin.config.set("turnstiles." + data.id, null);
+            MyPlugin.plugin.saveConfig();
+    
+            return true;
+    }
+
     public static List<TurnstileData> DataInit() {
 
-        if (config.get("turnstiles") == null) {
+        if (MyPlugin.config.get("turnstiles") == null) {
             return null;
         }
 
         List<TurnstileData> returned_data = new ArrayList<>();
 
-        for (String key : config.getConfigurationSection("turnstiles").getKeys(false)) {
+        for (String key : MyPlugin.config.getConfigurationSection("turnstiles").getKeys(false)) {
             TurnstileData data = new TurnstileData();
 
             data.id = Integer.parseInt(key);
 
-            data.material = Material.valueOf(config.getString("turnstiles." + key + ".material"));
-            data.price = config.getInt("turnstiles." + key + ".price");
-            data.coords.x = config.getInt("turnstiles." + key + ".coords.x");
-            data.coords.y = config.getInt("turnstiles." + key + ".coords.y");
-            data.coords.z = config.getInt("turnstiles." + key + ".coords.z");
+            data.material = Material.valueOf(MyPlugin.config.getString("turnstiles." + key + ".material"));
+            data.price = MyPlugin.config.getInt("turnstiles." + key + ".price");
+            data.coords.x = MyPlugin.config.getInt("turnstiles." + key + ".coords.x");
+            data.coords.y = MyPlugin.config.getInt("turnstiles." + key + ".coords.y");
+            data.coords.z = MyPlugin.config.getInt("turnstiles." + key + ".coords.z");
+            data.world = MyPlugin.config.getString("turnstiles." + key + ".world");
+
+            Block block = MyPlugin.plugin.getServer().getWorld(data.world).getBlockAt(data.coords.x, data.coords.y, data.coords.z);
+
+            block.setType(data.material);
 
             returned_data.add(data);
         }
+
+
 
         return returned_data;
     }
