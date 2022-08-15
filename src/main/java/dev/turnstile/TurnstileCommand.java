@@ -40,15 +40,12 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
                 
-                if (!player.hasPermission("turnstile.create")) { 
-                    player.sendMessage("§cYou don't have access to this command.");
-                    return true;
-                }
+                if (!TurnstileCheck.getPermission(player, "create")) return false;
 
-                if (getTypes().contains(block.getType()))
+                // This one is a bit special so I'm keeping the old code
+
+                if (TurnstileCheck.getTypes().contains(block.getType()))
                 {
-                    // Turnstile Creation
-    
                     List<TurnstileData> stored_data = TurnstileRenewed.GetData();
     
                     TurnstileData new_data = new TurnstileData();
@@ -94,6 +91,7 @@ public class TurnstileCommand implements CommandExecutor {
             }
             return true;
         }
+
         else if (args[0].equalsIgnoreCase("remove"))
         {
             if (sender instanceof Player)
@@ -101,44 +99,14 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
 
-                if (!player.hasPermission("turnstile.remove")) { 
-                    player.sendMessage("§cYou don't have access to this command.");
-                    return true;
-                }
+                if (!TurnstileCheck.getPermission(player, "remove")) return false;
 
-                
-                if (getTypes().contains(block.getType()))
-                {
-                    // Turnstile Creation
-    
-                    List<TurnstileData> stored_data = TurnstileRenewed.GetData();
-    
-                    TurnstileData new_data = new TurnstileData();
-    
-                    new_data.material = block.getType();
-    
-                    new_data.coords.x = block.getX();
-                    new_data.coords.y = block.getY();
-                    new_data.coords.z = block.getZ();
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block);
 
-                    for (TurnstileData data : stored_data)
-                    {
-                        if (data.coords.x == new_data.coords.x && data.coords.y == new_data.coords.y && data.coords.z == new_data.coords.z)
-                        {
-                            // Remove turnstile from temp var + config
-                            TurnstileSave.Remove(data);
-
-                            sender.sendMessage("This turnstile has been removed with the ID §6" + data.id + "§f.");
-                            return true;
-                        }
-                    }
-                    sender.sendMessage("§cThis block is not a turnstile.");
-                    return true;
-                }
-                else
-                {
-                    sender.sendMessage("You must be looking at a fence block.");
-                }
+                // Remove turnstile from temp var + config
+                TurnstileSave.Remove(data);
+                sender.sendMessage("This turnstile has been removed with the ID §6" + data.id + "§f.");
+                return true;
             }
             else {
                 sender.sendMessage("You must be a player to use this command.");
@@ -153,67 +121,82 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
 
-                if (!player.hasPermission("turnstile.price")) { 
-                    player.sendMessage("§cYou don't have access to this command.");
-                    return true;
-                }
+                if (!TurnstileCheck.getPermission(player, "price")) return false;
 
-                
-                if (getTypes().contains(block.getType()))
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block);
+
+                if (args.length == 2)
                 {
-                    // Turnstile Creation
-    
-                    List<TurnstileData> stored_data = TurnstileRenewed.GetData();
-    
-                    TurnstileData new_data = new TurnstileData();
-    
-                    new_data.material = block.getType();
-    
-                    new_data.coords.x = block.getX();
-                    new_data.coords.y = block.getY();
-                    new_data.coords.z = block.getZ();
-
-                    for (TurnstileData data : stored_data)
+                    try {
+                       Integer.parseInt(args[1]);
+                    }
+                    catch (NumberFormatException e)
                     {
-                        if (data.coords.x == new_data.coords.x && data.coords.y == new_data.coords.y && data.coords.z == new_data.coords.z)
+                        sender.sendMessage("§cInvalid price.");
+                        return true;
+                    }
+                    if (Integer.parseInt(args[1]) < 0)
                         {
-                            if (args.length == 2)
-                            {
-                                try {
-                                    Integer.parseInt(args[1]);
-                                }
-                                catch (NumberFormatException e)
-                                {
-                                    sender.sendMessage("§cInvalid price.");
-                                    return true;
-                                }
-
-                                if (Integer.parseInt(args[1]) < 0)
-                                {
-                                    sender.sendMessage("§cThe price must be a positive number.");
-                                    return true;
-                                }
-                                else
-                                {
-                                    data.price = Integer.parseInt(args[1]);
-                                    TurnstileSave.Save(data);
-                                    sender.sendMessage("The price of this turnstile has been set to §6" + data.price + "§f.");
-                                    return true;
-                                }
-                            }
-                            else {
-                                sender.sendMessage("§cUsage: /turnstile price <price>");
-                            }
+                            sender.sendMessage("§cThe price must be a positive number.");
                             return true;
                         }
+                    else
+                    {
+                        data.price = Integer.parseInt(args[1]);
+                        TurnstileSave.Save(data);
+                        sender.sendMessage("The price of this turnstile has been set to §6" + data.price + "§f.");
+                        return true;
                     }
-                    sender.sendMessage("§cThis block is not a turnstile.");
+                }
+                else {
+                    sender.sendMessage("§cUsage: /turnstile price <price>");
                     return true;
                 }
-                else
+            }
+            else {
+                sender.sendMessage("You must be a player to use this command.");
+                return true;
+            }
+        }
+
+        else if (args[0].equalsIgnoreCase("time"))
+        {
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!TurnstileCheck.getPermission(player, "price")) return false;
+                
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block);
+                
+                if (args.length == 2)
                 {
-                    sender.sendMessage("You must be looking at a fence block.");
+                    try {
+                        Integer.parseInt(args[1]);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        sender.sendMessage("§cInvalid price.");
+                        return true;
+                    }
+                    if (Integer.parseInt(args[1]) < 0)
+                    {
+                        sender.sendMessage("§cThe price must be a positive number.");
+                        return true;
+                    }
+                    else
+                    {
+                        data.price = Integer.parseInt(args[1]);
+                        TurnstileSave.Save(data);
+                        sender.sendMessage("The price of this turnstile has been set to §6" + data.price + "§f.");
+                        return true;
+                    }
                 }
+                else {
+                    sender.sendMessage("§cUsage: /turnstile price <price>");
+                }
+                return true;
             }
             else {
                 sender.sendMessage("You must be a player to use this command.");
@@ -244,24 +227,5 @@ public class TurnstileCommand implements CommandExecutor {
         sender.sendMessage("§bVersion §7- §f" + TurnstileRenewed.plugin.getDescription().getVersion());
         sender.sendMessage("§bAuthor §7- §f" + TurnstileRenewed.plugin.getDescription().getAuthors().toString());
         return true;
-    }
-
-
-    public static List<Material> getTypes()
-    {
-        List<Material> types = Arrays.asList(
-        Material.OAK_FENCE, 
-        Material.SPRUCE_FENCE, 
-        Material.BIRCH_FENCE, 
-        Material.JUNGLE_FENCE, 
-        Material.ACACIA_FENCE, 
-        Material.DARK_OAK_FENCE,
-        Material.MANGROVE_FENCE,
-        Material.CRIMSON_FENCE,
-        Material.WARPED_FENCE,
-        Material.NETHER_BRICK_FENCE
-        );
-
-        return types;
     }
 }
