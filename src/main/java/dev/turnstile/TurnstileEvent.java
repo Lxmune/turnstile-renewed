@@ -38,7 +38,7 @@ public class TurnstileEvent implements Listener {
 
             final Block block = event.getClickedBlock();
             
-            if (TurnstileCommand.getTypes().contains(block.getType())) {
+            if (TurnstileCheck.getTypes().contains(block.getType())) {
                 
                 int x = block.getX();
                 int y = block.getY();
@@ -114,7 +114,7 @@ public class TurnstileEvent implements Listener {
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (TurnstileCommand.getTypes().contains(event.getBlock().getType())) {
+        if (TurnstileCheck.getTypes().contains(event.getBlock().getType())) {
             for (int i = 0; i < TurnstileRenewed.GetData().size(); i++) {
                 if (TurnstileRenewed.GetData().get(i).coords.x == event.getBlock().getX() && TurnstileRenewed.GetData().get(i).coords.y == event.getBlock().getY() && TurnstileRenewed.GetData().get(i).coords.z == event.getBlock().getZ()) {
                     event.setCancelled(true);
@@ -127,7 +127,7 @@ public class TurnstileEvent implements Listener {
     @EventHandler
     public void onBlockNaturalBreak(BlockIgniteEvent event)
     {
-        if (TurnstileCommand.getTypes().contains(event.getBlock().getType())) {
+        if (TurnstileCheck.getTypes().contains(event.getBlock().getType())) {
             for (int i = 0; i < TurnstileRenewed.GetData().size(); i++) {
                 if (TurnstileRenewed.GetData().get(i).coords.x == event.getBlock().getX() && TurnstileRenewed.GetData().get(i).coords.y == event.getBlock().getY() && TurnstileRenewed.GetData().get(i).coords.z == event.getBlock().getZ()) {
                     event.setCancelled(true);
