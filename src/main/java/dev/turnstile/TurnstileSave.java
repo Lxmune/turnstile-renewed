@@ -19,6 +19,7 @@ public class TurnstileSave {
         TurnstileRenewed.config.set("turnstiles." + data.id + ".coords.y", data.coords.y);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".coords.z", data.coords.z);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".world", data.world);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".delay", data.delay);
 
         TurnstileRenewed.plugin.saveConfig();
 
@@ -53,6 +54,7 @@ public class TurnstileSave {
             data.coords.y = TurnstileRenewed.config.getInt("turnstiles." + key + ".coords.y");
             data.coords.z = TurnstileRenewed.config.getInt("turnstiles." + key + ".coords.z");
             data.world = TurnstileRenewed.config.getString("turnstiles." + key + ".world");
+            data.delay = TurnstileRenewed.config.getInt("turnstiles." + key + ".delay");
 
             Block block = TurnstileRenewed.plugin.getServer().getWorld(data.world).getBlockAt(data.coords.x, data.coords.y, data.coords.z);
 

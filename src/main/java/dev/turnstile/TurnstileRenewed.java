@@ -13,6 +13,8 @@ import net.milkbowl.vault.economy.Economy;
 
 public class TurnstileRenewed extends JavaPlugin {
 
+    public static String prefix = "§6[§eTurnstile§6]§r ";
+
     public static Plugin plugin = null;
 
     public static Economy economy;
