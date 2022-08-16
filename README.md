@@ -1,4 +1,4 @@
-# 🔒 Turnstile-Renewed : A remake of the old Turnstile plugin
+# 🔒 Turnstile-Renewed : A remake of the Turnstile plugin
 
 <h3>Supported versions: 1.19, 1.19.1, 1.19.2</h3>
 
