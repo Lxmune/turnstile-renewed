@@ -77,7 +77,7 @@ public class TurnstileCommand implements CommandExecutor {
     
                     TurnstileSave.Save(new_data);
     
-                    player.sendMessage(TurnstileRenewed.prefix + "Turnstile created with ID: " + new_data.id + " at position " + new_data.coords.x + " " + new_data.coords.y + " " + new_data.coords.z);
+                    player.sendMessage(TurnstileRenewed.prefix + "§7Turnstile created with ID §6" + new_data.id + "§7 at position §6" + new_data.coords.x + " " + new_data.coords.y + " " + new_data.coords.z);
                 }
                 else
                 {
