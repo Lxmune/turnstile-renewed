@@ -34,11 +34,11 @@ public class TurnstileEvent implements Listener {
             TurnstileData data = TurnstileCheck.getTurnstile(player, block, true);
             if (data == null) return;
 
-            final int time = data.delay;
+            final Double time = data.delay;
 
             // Check if the player got the money
             if (TurnstileRenewed.economy.getBalance(event.getPlayer().getName()) < data.price) {
-                event.getPlayer().sendMessage(TurnstileRenewed.prefix + "§6You don't have enough money to use this turnstile.");
+                event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-money"));
                 return;
             }
             final Material temp_block = block.getType();
@@ -54,7 +54,8 @@ public class TurnstileEvent implements Listener {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(time*1000);
+                        Double temp = (Double)time * 1000;
+                        Thread.sleep(temp.longValue());
                         CloseTurnstile close = new CloseTurnstile();
                         Bukkit.getScheduler().runTask(TurnstileRenewed.plugin, close);
                     } catch(InterruptedException e) {
@@ -63,9 +64,8 @@ public class TurnstileEvent implements Listener {
                 }
             });
             
-            event.getPlayer().sendMessage(TurnstileRenewed.prefix + "§7The turnstile is §aopen§7.\n§7Your account got charged §a" + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
+            event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("opened") + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
             TurnstileRenewed.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);
-            TurnstileRenewed.economy.depositPlayer("tom2090", data.price);
         }
     }
     
@@ -75,7 +75,7 @@ public class TurnstileEvent implements Listener {
             for (int i = 0; i < TurnstileRenewed.GetData().size(); i++) {
                 if (TurnstileRenewed.GetData().get(i).coords.x == event.getBlock().getX() && TurnstileRenewed.GetData().get(i).coords.y == event.getBlock().getY() && TurnstileRenewed.GetData().get(i).coords.z == event.getBlock().getZ()) {
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + "§cYou can't break this turnstile.");
+                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-break"));
                 }
             }
         }

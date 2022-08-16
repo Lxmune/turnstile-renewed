@@ -8,6 +8,3 @@ commands:
   turnstile:
     description: Main command.
     usage: /<command>
-    permission: turnstile.use
-  turnstile help:
-  

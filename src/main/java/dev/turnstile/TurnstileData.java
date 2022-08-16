@@ -8,11 +8,13 @@ public class TurnstileData {
 
     public Material material;
 
-    public int price = 1;
+    public Double price = 1.0;
 
-    public int delay = 4;
+    public Double delay = 4.0;
 
     public String world;
+
+    public String owner;
 
     public class Coords {
         public int x;

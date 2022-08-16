@@ -6,6 +6,8 @@ import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 
 // Checks if this block is a turnstile
@@ -30,22 +32,50 @@ public class TurnstileCheck {
                     return data;
                 }
             }
-            if (!silent) sender.sendMessage(TurnstileRenewed.prefix + "§cThis block is not a turnstile.");
+            if (!silent) sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("not-turnstile"));
             return null;
         }
         else
         {
-            if (!silent) sender.sendMessage(TurnstileRenewed.prefix + "You must be looking at a fence block.");
+            if (!silent) sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-look-fence"));
             return null;
         }
     }
 
     public static boolean getPermission(CommandSender player, String name) {
         if (!player.hasPermission("turnstile." + name)) { 
-            player.sendMessage(TurnstileRenewed.prefix + "§cYou don't have access to this command.");
+            player.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-permission"));
             return false;
         }
         return true;
+    }
+
+    public static boolean getAccess(Player player, TurnstileData data) {
+        if (data.owner != null) {
+            if (data.owner.equals(player.getUniqueId().toString())) {
+                return true;
+            }
+            else if (player.hasPermission("turnstile.bypass")) {
+                player.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("turnstile-bypass"));
+                return true;
+            }
+            else {
+                player.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("not-owner"));
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+
+    public static Player getPlayer(Player sender, String player) {
+        Player target = Bukkit.getPlayer(player);
+        if (target == null) {
+            sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("not-found"));
+            return null;
+        }
+        return target;
     }
 
 

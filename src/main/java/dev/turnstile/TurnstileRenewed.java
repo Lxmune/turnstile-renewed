@@ -1,10 +1,12 @@
 package dev.turnstile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,12 +23,27 @@ public class TurnstileRenewed extends JavaPlugin {
 
     public static FileConfiguration config;
 
+    // Loading the messages file
+    public static File messagesFile;
+    public static FileConfiguration messagesConfig;
+
     // Creating the fence var (list of fence blocks)
     static List<TurnstileData> stored_data = new ArrayList<>();
 
     @Override
     public void onEnable() {
         plugin = this;
+
+
+        messagesFile = new File(this.getDataFolder(), "messages.yml");
+
+        // Check if the messages file exists
+        if (!messagesFile.exists()) {
+            getLogger().log(Level.INFO, "The messages file does not exist, creating it...");
+            saveResource("messages.yml", false);
+        }
+
+        messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
         
         // Init
         getLogger().log(Level.INFO, "The plugin has been enabled. Reminder that this plugin is still in development, so there might be unexpected bugs.");
@@ -37,7 +54,7 @@ public class TurnstileRenewed extends JavaPlugin {
         // Registering the event listener
         this.getServer().getPluginManager().registerEvents(new TurnstileEvent(), this);
 
-        //Initializing economy
+        // Initializing economy
         if (!setupEconomy() ) {
             getLogger().log(Level.INFO, String.format("Disabled due to no Vault dependency found!"));
             getServer().getPluginManager().disablePlugin(this);
