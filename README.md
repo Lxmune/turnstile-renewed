@@ -1,4 +1,4 @@
-# turnstile-renewed
+# 🔒 Turnstile-Renewed : A remake of the old Turnstile plugin
 
 <h3>Supported versions: 1.19, 1.19.1, 1.19.2</h3>
 
@@ -18,3 +18,9 @@ Feel free to contribute to the project by reporting issues and suggesting stuff.
 - <b>/turnstile create</b>: Create a turnstile. <b>P: turnstile.create</b>
 - <b>/turnstile remove</b>: Remove a turnstile. <b>P: turnstile.remove</b>
 - <b>/turnstile price</b>: Modify the price of a turnstile. <b>P: turnstile.price</b>
+- <b>/turnstile owner</b>: Modify the owner of a turnstile. <b>P: turnstile.owner</b>
+- <b>/turnstile delay</b>: Modify the closure delay of a turnstile. <b>P: turnstile.delay</b>
+
+<b>Additional permissions:</b>
+- <b>turnstile.use</b>: Allow the usage of a turnstile.
+- <b>turnstile.bypass</b>: Allow a player to get access to other's turnstiles.
