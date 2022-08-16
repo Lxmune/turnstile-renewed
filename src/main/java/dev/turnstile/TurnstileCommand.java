@@ -26,10 +26,51 @@ public class TurnstileCommand implements CommandExecutor {
             return true;
         }
 
+        else if (args[0].equalsIgnoreCase("list")) {
+            List<TurnstileData> stored_data = TurnstileRenewed.GetData();
+            sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("list-turnstiles"));
+            for (TurnstileData data : stored_data)
+            {
+                sender.sendMessage("§r §6§lID " + data.id
+                + "\n§r   §7Owner - §6" + data.owner
+                + "\n§r   §7Coords §6" + data.coords.x + "§7, §6" + data.coords.y + "§7, §6" + data.coords.z
+                + "\n§r   §7Material - §6" + data.material.toString()
+                + "\n§r   §7Price - §6" + data.price
+                + "\n§r   §7Delay - §6" + data.delay
+                + "\n§r   §7World - §6" + data.world
+                );
+            }
+            return true;
+        }
+
         else if (args[0].equalsIgnoreCase("info"))
         {
-            getInfo(sender);
-            return true;
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!TurnstileCheck.getPermission(player, "info")) return true;
+
+                TurnstileData data = TurnstileCheck.getTurnstile(player, block, false);
+
+                if (data == null) return false;
+                else {
+                    player.sendMessage(TurnstileRenewed.prefix + "§6Turnstile info:");
+                    player.sendMessage("§7ID: §e" + data.id);
+                    player.sendMessage("§7Owner (UUID): §e" + data.owner);
+                    player.sendMessage("§7Price: §e" + data.price);
+                    player.sendMessage("§7Delay: §e" + data.delay);
+                    player.sendMessage("§7World: §e" + data.world);
+                    player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
+                    return true;
+                }
+            }
+            else
+            {
+                sender.sendMessage(TurnstileMessages.getMessage("must-look-fence"));
+                return true;
+            }
         }
         else if (args[0].equalsIgnoreCase("create"))
         {
@@ -38,7 +79,7 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
                 
-                if (!TurnstileCheck.getPermission(player, "create")) return true;
+                if (!TurnstileCheck.getPermission(player, "create")) return false;
 
                 // This one is a bit special so I'm keeping the old code
 
@@ -56,11 +97,15 @@ public class TurnstileCommand implements CommandExecutor {
 
                     new_data.world = block.getWorld().getName();
 
+                    new_data.owner = player.getUniqueId().toString();
+
                     for (TurnstileData data : stored_data)
                     {
                         if (data.coords.x == new_data.coords.x && data.coords.y == new_data.coords.y && data.coords.z == new_data.coords.z)
                         {
-                            sender.sendMessage(TurnstileRenewed.prefix + "This turnstile §calready exists§f with the ID §6" + data.id + "§f.");
+                            if (!TurnstileCheck.getAccess(player, data)) return true;
+
+                            sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("already-exists") + data.id + "§f.");
                             return true;
                         }
                     }
@@ -77,15 +122,15 @@ public class TurnstileCommand implements CommandExecutor {
     
                     TurnstileSave.Save(new_data);
     
-                    player.sendMessage(TurnstileRenewed.prefix + "§7Turnstile created with ID §6" + new_data.id + "§7 at position §6" + new_data.coords.x + " " + new_data.coords.y + " " + new_data.coords.z);
+                    player.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-creation-1") + new_data.id + TurnstileMessages.getMessage("successful-creation-2") + new_data.coords.x + " " + new_data.coords.y + " " + new_data.coords.z);
                 }
                 else
                 {
-                    sender.sendMessage(TurnstileRenewed.prefix + "You must be looking at a fence block.");
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-look-fence"));
                 }
             }
             else {
-                sender.sendMessage(TurnstileRenewed.prefix + "You must be a player to use this command.");
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
             }
             return true;
         }
@@ -102,13 +147,15 @@ public class TurnstileCommand implements CommandExecutor {
                 TurnstileData data = TurnstileCheck.getTurnstile(player, block, false);
                 if (data == null) return true;
 
+                if (!TurnstileCheck.getAccess(player, data)) return true;
+
                 // Remove turnstile from temp var + config
                 TurnstileSave.Remove(data);
-                sender.sendMessage(TurnstileRenewed.prefix + "This turnstile has been removed with the ID §6" + data.id + "§f.");
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-removal") + data.id + "§f.");
                 return true;
             }
             else {
-                sender.sendMessage(TurnstileRenewed.prefix + "You must be a player to use this command.");
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
             }
             return true;
         }
@@ -125,36 +172,38 @@ public class TurnstileCommand implements CommandExecutor {
                 TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
                 if (data == null) return true;
 
+                if (!TurnstileCheck.getAccess(player, data)) return true;
+
                 if (args.length == 2)
                 {
                     try {
-                       Integer.parseInt(args[1]);
+                       Double.parseDouble(args[1]);
                     }
                     catch (NumberFormatException e)
                     {
-                        sender.sendMessage(TurnstileRenewed.prefix + "§cInvalid price.");
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("invalid-price"));
                         return true;
                     }
-                    if (Integer.parseInt(args[1]) < 0)
+                    if (Double.parseDouble(args[1]) < 0)
                         {
-                            sender.sendMessage(TurnstileRenewed.prefix + "§cThe price must be a positive number.");
+                            sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("price-positive"));
                             return true;
                         }
                     else
                     {
-                        data.price = Integer.parseInt(args[1]);
+                        data.price = Double.parseDouble(args[1]);
                         TurnstileSave.Save(data);
-                        sender.sendMessage(TurnstileRenewed.prefix + "The price of this turnstile has been set to §6" + data.price + "§f.");
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-price") + data.price + "§f.");
                         return true;
                     }
                 }
                 else {
-                    sender.sendMessage(TurnstileRenewed.prefix + "§cUsage: /turnstile price <price>");
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("usage-price"));
                     return true;
                 }
             }
             else {
-                sender.sendMessage(TurnstileRenewed.prefix + "You must be a player to use this command.");
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
                 return true;
             }
         }
@@ -170,39 +219,94 @@ public class TurnstileCommand implements CommandExecutor {
                 
                 TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
                 if (data == null) return true;
+
+                if (!TurnstileCheck.getAccess(player, data)) return true;
                 
                 if (args.length == 2)
                 {
+                    Double temp_delay;
                     try {
-                        Integer.parseInt(args[1]);
+                       Integer.parseInt(args[1]);
+                       // Convert Integer to Double
+                       temp_delay = Double.parseDouble(args[1]);
                     }
                     catch (NumberFormatException e)
                     {
-                        sender.sendMessage(TurnstileRenewed.prefix + "§cInvalid delay.");
-                        return true;
+                        try {
+                            temp_delay = Double.parseDouble(args[1]);
+                        }
+                        catch (NumberFormatException f)
+                        {
+                            sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("invalid-delay"));
+                            return true;
+                        }
                     }
-                    if (Integer.parseInt(args[1]) < 0)
+
+                    if (temp_delay < 0)
                     {
-                        sender.sendMessage(TurnstileRenewed.prefix + "§cThe delay must be a positive number.");
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("delay-positive"));
                         return true;
                     }
                     else
                     {
-                        data.delay = Integer.parseInt(args[1]);
+                        data.delay = temp_delay;
                         TurnstileSave.Save(data);
-                        sender.sendMessage(TurnstileRenewed.prefix + "The delay of this turnstile has been set to §6" + data.delay + " seconds§f.");
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-delay-1") + data.delay + TurnstileMessages.getMessage("successful-delay-2"));
                         return true;
                     }
                 }
                 else {
-                    sender.sendMessage(TurnstileRenewed.prefix + "§cUsage: /turnstile delay <delay>");
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("usage-delay"));
                 }
                 return true;
             }
             else {
-                sender.sendMessage(TurnstileRenewed.prefix + "You must be a player to use this command.");
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
             }
             return true;
+        }
+
+        else if (args[0].equalsIgnoreCase("owner"))
+        {
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!TurnstileCheck.getPermission(player, "owner")) return true;
+
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
+                if (data == null) return true;
+
+                if (!TurnstileCheck.getAccess(player, data)) return true;
+
+                if (args.length == 2)
+                {
+                    Player target = TurnstileCheck.getPlayer(player, args[1]);
+                    
+                    if (target == null) return true;
+                    else if (target.getUniqueId().equals(player.getUniqueId()))
+                    {
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("owner-self"));
+                        return true;
+                    }
+                    else
+                    {
+                        data.owner = target.getUniqueId().toString();
+                        TurnstileSave.Save(data);
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-owner") + target.getName() + "§f.");
+                        return true;
+                    }
+                }
+                else {
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("usage-owner"));
+                    return true;
+                }
+            }
+            else {
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
+                return true;
+            }
         }
         
         else {
@@ -214,20 +318,13 @@ public class TurnstileCommand implements CommandExecutor {
 
     public boolean getHelp(CommandSender sender)
     {
-        sender.sendMessage("§b/turnstile help §7- §fDisplay this help");
-        sender.sendMessage("§b/turnstile info §7- §fDisplay information about the plugin");
-        sender.sendMessage("§b/turnstile create §7- §fCreate a turnstile at your target block");
-        sender.sendMessage("§b/turnstile remove §7- §fRemove a turnstile at your target block");
-        sender.sendMessage("§b/turnstile price §7- §fSet the price of a turnstile at your target block");
-        sender.sendMessage("§b/turnstile delay §7- §fSet the delay of a turnstile at your target block");
-        return true;
-    }
-
-    public boolean getInfo(CommandSender sender)
-    {
-        sender.sendMessage("§bTurnstile §7- §fA plugin for turning fences into turnstiles.");
-        sender.sendMessage("§bVersion §7- §f" + TurnstileRenewed.plugin.getDescription().getVersion());
-        sender.sendMessage("§bAuthor §7- §f" + TurnstileRenewed.plugin.getDescription().getAuthors().toString());
+        sender.sendMessage(TurnstileMessages.getMessage("help-help"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-info"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-create"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-remove"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-price"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-delay"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-owner"));
         return true;
     }
 }
