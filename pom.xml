@@ -4,7 +4,7 @@
 
     <artifactId>turnstile</artifactId>
     <groupId>dev.turnstile</groupId>
-    <version>1.1</version>
+    <version>1.2</version>
     
     <!-- Repositories -->
     <repositories>
@@ -58,7 +58,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <configuration>
                     <tasks>
-                        <copy file="target/turnstile-1.1.jar" todir="/home/tom/Documents/Dev MC Server/plugins"/>
+                        <copy file="target/turnstile-1.2.jar" todir="/home/tom/Documents/Dev MC Server/plugins"/>
                     </tasks>
                 </configuration>
                 <executions>
