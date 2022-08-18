@@ -1,7 +1,9 @@
 package dev.turnstile;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -56,17 +58,24 @@ public class TurnstileCommand implements CommandExecutor {
                 TurnstileData data = TurnstileCheck.getTurnstile(player, block, false);
 
                 if (data == null) return false;
-                else {
-                    player.sendMessage(TurnstileRenewed.prefix + "§6Turnstile info:");
-                    player.sendMessage("§7ID: §e" + data.id);
-                    player.sendMessage("§7Owner (UUID): §e" + data.owner);
-                    player.sendMessage("§7Owner (Name): §e" + data.owner_name);
-                    player.sendMessage("§7Price: §e" + data.price);
-                    player.sendMessage("§7Delay: §e" + data.delay);
-                    player.sendMessage("§7World: §e" + data.world);
-                    player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
-                    return true;
+
+                // Checking the owner
+                if (data.owner_name == null) {
+                    UUID temp = UUID.fromString(data.owner);
+                    data.owner_name = Bukkit.getOfflinePlayer(temp).getName();
+                    
+                    if (data.owner_name != null) TurnstileSave.Save(data);
                 }
+                player.sendMessage(TurnstileRenewed.prefix + "§6Turnstile info:");
+                player.sendMessage("§7ID: §e" + data.id);
+                player.sendMessage("§7Owner (UUID): §e" + data.owner);
+                if (data.owner_name == null) player.sendMessage("§7Owner (Name): §eUnknown");
+                else player.sendMessage("§7Owner (Name): §e" + data.owner_name);
+                player.sendMessage("§7Price: §e" + data.price);
+                player.sendMessage("§7Delay: §e" + data.delay);
+                player.sendMessage("§7World: §e" + data.world);
+                player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
+                return true;
             }
             else
             {
@@ -314,6 +323,8 @@ public class TurnstileCommand implements CommandExecutor {
             }
         }
         
+        // Admin command
+
         else if (args[0].equalsIgnoreCase("command"))
         {
             if (sender instanceof Player)
@@ -321,7 +332,7 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
 
-                if (!TurnstileCheck.getPermission(player, "command")) return true;
+                if (!TurnstileCheck.getPermission(player, "admin.command")) return true;
 
                 TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
                 if (data == null) return true;
@@ -342,10 +353,10 @@ public class TurnstileCommand implements CommandExecutor {
                     // Getting the rest of the arguments
                     StringBuilder myStringBuilder = new StringBuilder(args[1]);
                     for(int a = 2; a < args.length - 1; a++) myStringBuilder.append(" ").append(args[a]);
-                    data.command = myStringBuilder.toString();
+                    data.command = myStringBuilder.toString().replace("%p", player.getName()); // Player variable
 
                     TurnstileSave.Save(data);
-                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-command") + data.price + "§f.");
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-command") + data.command + "§f.");
                     return true;
                 }
                 else {

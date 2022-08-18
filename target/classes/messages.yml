@@ -17,6 +17,7 @@ messages:
   usage-owner: "§cUsage: /turnstile owner <owner>"
   usage-price: "§cUsage: /turnstile price <price>"
   usage-delay: "§cUsage: /turnstile delay <delay>"
+  usage-command: "§cUsage: /turnstile command <command>"
   help-help: "§b/turnstile help §7- §fDisplay this help"
   help-info: "§b/turnstile info §7- §fDisplay information about the plugin"
   help-create: "§b/turnstile create §7- §fCreate a turnstile at your target block"
@@ -33,6 +34,8 @@ messages:
   not-enough-money: "§6You don't have enough money to use this turnstile."
   opened: "§7The turnstile is §aopen§7.\n§7Your account got charged §a"
   no-break: "§cYou can't break this turnstile."
+  command-removed: "§7You have successfully removed the assigned command."
+  successful-command: "§7The command of this turnstile has been set to §a"
 
   # Console message (colors aren't recommended)
   must-be-player: "You must be a player to use this command."
