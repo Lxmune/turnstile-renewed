@@ -26,7 +26,8 @@ public class TurnstileCommand implements CommandExecutor {
             return true;
         }
 
-        else if (args[0].equalsIgnoreCase("list")) {
+        else if (args[0].equalsIgnoreCase("list"))
+        {
             List<TurnstileData> stored_data = TurnstileRenewed.GetData();
             sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("list-turnstiles"));
             for (TurnstileData data : stored_data)
@@ -59,6 +60,7 @@ public class TurnstileCommand implements CommandExecutor {
                     player.sendMessage(TurnstileRenewed.prefix + "§6Turnstile info:");
                     player.sendMessage("§7ID: §e" + data.id);
                     player.sendMessage("§7Owner (UUID): §e" + data.owner);
+                    player.sendMessage("§7Owner (Name): §e" + data.owner_name);
                     player.sendMessage("§7Price: §e" + data.price);
                     player.sendMessage("§7Delay: §e" + data.delay);
                     player.sendMessage("§7World: §e" + data.world);
@@ -72,6 +74,7 @@ public class TurnstileCommand implements CommandExecutor {
                 return true;
             }
         }
+
         else if (args[0].equalsIgnoreCase("create"))
         {
             if (sender instanceof Player)
@@ -98,6 +101,8 @@ public class TurnstileCommand implements CommandExecutor {
                     new_data.world = block.getWorld().getName();
 
                     new_data.owner = player.getUniqueId().toString();
+
+                    new_data.owner_name = player.getName();
 
                     for (TurnstileData data : stored_data)
                     {
@@ -309,6 +314,51 @@ public class TurnstileCommand implements CommandExecutor {
             }
         }
         
+        else if (args[0].equalsIgnoreCase("command"))
+        {
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!TurnstileCheck.getPermission(player, "command")) return true;
+
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
+                if (data == null) return true;
+
+                if (!TurnstileCheck.getAccess(player, data)) return true;
+
+                if (args.length == 1) {
+                    if (data.command != null) {
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("command-removed") + "§f.");
+                        data.command = null;
+                        TurnstileSave.Save(data);
+                        return true;
+                    }
+                }
+
+                if (args.length >= 2)
+                {
+                    // Getting the rest of the arguments
+                    StringBuilder myStringBuilder = new StringBuilder(args[1]);
+                    for(int a = 2; a < args.length - 1; a++) myStringBuilder.append(" ").append(args[a]);
+                    data.command = myStringBuilder.toString();
+
+                    TurnstileSave.Save(data);
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-command") + data.price + "§f.");
+                    return true;
+                }
+                else {
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("usage-command"));
+                    return true;
+                }
+            }
+            else {
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
+                return true;
+            }
+        }
+
         else {
             getHelp(sender);
             return true;

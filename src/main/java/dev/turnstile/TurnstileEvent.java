@@ -63,6 +63,10 @@ public class TurnstileEvent implements Listener {
                     }
                 }
             });
+
+            if (data.command != null) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), data.command);
+            }
             
             event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("opened") + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
             TurnstileRenewed.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);

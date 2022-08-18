@@ -16,6 +16,10 @@ public class TurnstileData {
 
     public String owner;
 
+    public String owner_name;
+
+    public String command;
+
     public class Coords {
         public int x;
         public int y;
