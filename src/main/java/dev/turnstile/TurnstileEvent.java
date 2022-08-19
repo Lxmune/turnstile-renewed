@@ -25,14 +25,14 @@ public class TurnstileEvent implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND && event.getItem() == null) {
 
-            event.setCancelled(true);
-
             final Block block = event.getClickedBlock();
 
             final Player player = event.getPlayer();
 
             TurnstileData data = TurnstileCheck.getTurnstile(player, block, true);
             if (data == null) return;
+
+            event.setCancelled(true);
 
             final Double time = data.delay;
 
@@ -65,7 +65,7 @@ public class TurnstileEvent implements Listener {
             });
 
             if (data.command != null) {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), data.command);
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), data.command.toString().replace("%p", player.getName()));
             }
             
             event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("opened") + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
