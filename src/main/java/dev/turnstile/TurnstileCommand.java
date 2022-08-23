@@ -75,6 +75,8 @@ public class TurnstileCommand implements CommandExecutor {
                 player.sendMessage("§7Delay: §e" + data.delay);
                 player.sendMessage("§7World: §e" + data.world);
                 player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
+                player.sendMessage("§7Material: §e" + data.material.toString());
+                player.sendMessage("§7Command: §e" + data.command);
                 return true;
             }
             else
@@ -352,7 +354,7 @@ public class TurnstileCommand implements CommandExecutor {
                 {
                     // Getting the rest of the arguments
                     StringBuilder myStringBuilder = new StringBuilder(args[1]);
-                    for(int a = 2; a < args.length - 1; a++) myStringBuilder.append(" ").append(args[a]);
+                    for(int a = 2; a < args.length; a++) myStringBuilder.append(" ").append(args[a]);
                     data.command = myStringBuilder.toString(); // Player variable
 
                     TurnstileSave.Save(data);
@@ -386,6 +388,7 @@ public class TurnstileCommand implements CommandExecutor {
         sender.sendMessage(TurnstileMessages.getMessage("help-price"));
         sender.sendMessage(TurnstileMessages.getMessage("help-delay"));
         sender.sendMessage(TurnstileMessages.getMessage("help-owner"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-command"));
         return true;
     }
 }

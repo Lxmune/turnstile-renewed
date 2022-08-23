@@ -25,6 +25,7 @@ messages:
   help-price: "§b/turnstile price §7- §fSet the price of a turnstile at your target block"
   help-delay: "§b/turnstile delay §7- §fSet the delay of a turnstile at your target block"
   help-owner: "§b/turnstile owner §7- §fSet the owner of a turnstile at your target block"
+  help-command: "§b/turnstile command §7- §fSet the command of a turnstile at your target block"
   not-turnstile: "§cThis block is not a turnstile."
   must-look-fence: "§cYou must be looking at a fence block."
   no-permission: "§cYou don't have access to this command."
@@ -34,7 +35,7 @@ messages:
   not-enough-money: "§6You don't have enough money to use this turnstile."
   opened: "§7The turnstile is §aopen§7.\n§7Your account got charged §a"
   no-break: "§cYou can't break this turnstile."
-  command-removed: "§7You have successfully removed the assigned command."
+  command-removed: "§7You have successfully removed the assigned command"
   successful-command: "§7The command of this turnstile has been set to §a"
 
   # Console message (colors aren't recommended)
