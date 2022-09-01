@@ -20,6 +20,7 @@ Feel free to contribute to the project by reporting issues and suggesting stuff.
 - <b>/turnstile price</b>: Modify the price of a turnstile. <b>P: turnstile.price</b>
 - <b>/turnstile owner</b>: Modify the owner of a turnstile. <b>P: turnstile.owner</b>
 - <b>/turnstile delay</b>: Modify the closure delay of a turnstile. <b>P: turnstile.delay</b>
+- <b>/turnstile item</b>: Modify the item assigned to a turnstile. <b>P: turnstile.item</b>
 - <b>/turnstile command</b>: (ADMIN COMMAND) Assign a console-executed command to a turnstile. Use the %p variable to replace it with the name of the executing player. <b>P: turnstile.admin.command</b>
 
 <b>Additional permissions:</b>
