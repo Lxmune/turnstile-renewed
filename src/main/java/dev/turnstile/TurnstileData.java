@@ -10,6 +10,10 @@ public class TurnstileData {
 
     public Double price = 1.0;
 
+    public String item;
+
+    public int item_amount;
+
     public Double delay = 4.0;
 
     public String world;

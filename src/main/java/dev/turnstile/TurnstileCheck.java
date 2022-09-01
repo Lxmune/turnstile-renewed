@@ -50,6 +50,11 @@ public class TurnstileCheck {
         return true;
     }
 
+    public static boolean getEconomy(CommandSender player) {
+        if (TurnstileRenewed.economy == null) return false;
+        return true;
+    }
+
     public static boolean getAccess(Player player, TurnstileData data) {
         if (data.owner != null) {
             if (data.owner.equals(player.getUniqueId().toString())) {

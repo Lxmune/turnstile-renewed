@@ -5,8 +5,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
@@ -36,11 +39,24 @@ public class TurnstileEvent implements Listener {
 
             final Double time = data.delay;
 
-            // Check if the player got the money
-            if (TurnstileRenewed.economy.getBalance(event.getPlayer().getName()) < data.price) {
-                event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-money"));
-                return;
+            if (TurnstileCheck.getEconomy(player)) {
+                // Check if the player got the money
+                if (TurnstileRenewed.economy.getBalance(event.getPlayer().getName()) < data.price) {
+                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-money"));
+                    return;
+                }
             }
+
+            // Check if the player got the required item
+            if (data.item != null) {
+                if (event.getPlayer().getInventory().contains(new ItemStack(Material.valueOf(data.item), data.item_amount))) {
+                }
+                else {
+                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-item") + " (" + data.item_amount + "x " + data.item + ")");
+                    return;
+                }
+            }
+
             final Material temp_block = block.getType();
             block.setType(Material.AIR);
             class CloseTurnstile implements Runnable {
@@ -67,9 +83,25 @@ public class TurnstileEvent implements Listener {
             if (data.command != null) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), data.command.toString().replace("%p", player.getName()));
             }
+
+            String message = TurnstileMessages.getMessage("opened");
             
-            event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("opened") + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.");
-            TurnstileRenewed.economy.withdrawPlayer(event.getPlayer().getPlayerListName(), data.price);
+            // Check price
+            if (TurnstileCheck.getEconomy(player)) {
+                // Pay the player
+                TurnstileRenewed.economy.withdrawPlayer(player.getName(), data.price);
+                message += TurnstileMessages.getMessage("charged") + data.price + " " + TurnstileRenewed.economy.currencyNamePlural() + "§f.";
+            }
+
+            // Check item
+            if (data.item != null) {
+                message += TurnstileMessages.getMessage("item-charged") + data.item_amount + "x " + data.item + "§f.";
+                // Remove the item
+                event.getPlayer().getInventory().removeItem(new ItemStack(Material.valueOf(data.item), data.item_amount));
+            }
+
+            // Send the message
+            event.getPlayer().sendMessage(TurnstileRenewed.prefix + message);
         }
     }
     

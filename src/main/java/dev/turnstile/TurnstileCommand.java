@@ -8,6 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.Material;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.entity.Player;
 
 
@@ -57,7 +59,7 @@ public class TurnstileCommand implements CommandExecutor {
 
                 TurnstileData data = TurnstileCheck.getTurnstile(player, block, false);
 
-                if (data == null) return false;
+                if (data == null) return true;
 
                 // Checking the owner
                 if (data.owner_name == null) {
@@ -77,6 +79,7 @@ public class TurnstileCommand implements CommandExecutor {
                 player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
                 player.sendMessage("§7Material: §e" + data.material.toString());
                 player.sendMessage("§7Command: §e" + data.command);
+                player.sendMessage("§7Item: §e" + data.item + " (" + data.item_amount + "x)");
                 return true;
             }
             else
@@ -93,7 +96,7 @@ public class TurnstileCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 Block block = player.getPlayer().getTargetBlock(null, 10);
                 
-                if (!TurnstileCheck.getPermission(player, "create")) return false;
+                if (!TurnstileCheck.getPermission(player, "create")) return true;
 
                 // This one is a bit special so I'm keeping the old code
 
@@ -185,6 +188,11 @@ public class TurnstileCommand implements CommandExecutor {
 
                 if (!TurnstileCheck.getPermission(player, "price")) return true;
 
+                if (!TurnstileCheck.getEconomy(player)) {
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-economy"));
+                    return true;
+                }
+
                 TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
                 if (data == null) return true;
 
@@ -215,6 +223,51 @@ public class TurnstileCommand implements CommandExecutor {
                 }
                 else {
                     sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("usage-price"));
+                    return true;
+                }
+            }
+            else {
+                sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-be-player"));
+                return true;
+            }
+        }
+
+        else if (args[0].equalsIgnoreCase("item"))
+        {
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Block block = player.getPlayer().getTargetBlock(null, 10);
+
+                if (!TurnstileCheck.getPermission(player, "item")) return true;
+
+                TurnstileData data = TurnstileCheck.getTurnstile(sender, block, false);
+                if (data == null) return true;
+
+                if (!TurnstileCheck.getAccess(player, data)) return true;
+
+                Material item = player.getInventory().getItemInMainHand().getType();
+                int item_amount = player.getInventory().getItemInMainHand().getAmount();
+
+                if (item == null || item == Material.AIR)
+                {
+                    if (data.item != null)
+                    {
+                        data.item = null;
+                        data.item_amount = 0;
+                        TurnstileSave.Save(data);
+                        sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-item-removal"));
+                        return true;
+                    }
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("must-hold-item"));
+                    return true;
+                }
+                else
+                {
+                    data.item = item.toString();
+                    data.item_amount = item_amount;
+                    TurnstileSave.Save(data);
+                    sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-item"));
                     return true;
                 }
             }
@@ -389,6 +442,7 @@ public class TurnstileCommand implements CommandExecutor {
         sender.sendMessage(TurnstileMessages.getMessage("help-delay"));
         sender.sendMessage(TurnstileMessages.getMessage("help-owner"));
         sender.sendMessage(TurnstileMessages.getMessage("help-command"));
+        sender.sendMessage(TurnstileMessages.getMessage("help-item"));
         return true;
     }
 }

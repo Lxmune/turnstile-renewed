@@ -21,6 +21,8 @@ public class TurnstileSave {
         TurnstileRenewed.config.set("turnstiles." + data.id + ".owner", data.owner);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".owner_name", data.owner_name);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".command", data.command);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.name", data.item);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.amount", data.item_amount);
 
         TurnstileRenewed.plugin.saveConfig();
 
@@ -59,6 +61,8 @@ public class TurnstileSave {
             data.owner = TurnstileRenewed.config.getString("turnstiles." + key + ".owner");
             data.owner_name = TurnstileRenewed.config.getString("turnstiles." + key + ".owner_name");
             data.command = TurnstileRenewed.config.getString("turnstiles." + key + ".command");
+            data.item = TurnstileRenewed.config.getString("turnstiles." + key + ".item.name");
+            data.item_amount = TurnstileRenewed.config.getInt("turnstiles." + key + ".item.amount");
 
             Block block = TurnstileRenewed.plugin.getServer().getWorld(data.world).getBlockAt(data.coords.x, data.coords.y, data.coords.z);
 

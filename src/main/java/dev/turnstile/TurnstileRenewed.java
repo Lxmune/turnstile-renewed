@@ -34,6 +34,11 @@ public class TurnstileRenewed extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
+        // Initializing economy
+        if (!setupEconomy() ) {
+            getLogger().log(Level.INFO, String.format("No Vault dependency found! Disabling the economy system."));
+            economy = null;
+        }
 
         messagesFile = new File(this.getDataFolder(), "messages.yml");
 
@@ -53,13 +58,6 @@ public class TurnstileRenewed extends JavaPlugin {
 
         // Registering the event listener
         this.getServer().getPluginManager().registerEvents(new TurnstileEvent(), this);
-
-        // Initializing economy
-        if (!setupEconomy() ) {
-            getLogger().log(Level.INFO, String.format("Disabled due to no Vault dependency found!"));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         // Initializing the data
         config = TurnstileRenewed.plugin.getConfig();
