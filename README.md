@@ -1,6 +1,6 @@
 # 🔒 Turnstile-Renewed : A remake of the Turnstile plugin
 
-<h3>Supported versions: 1.19, 1.19.1, 1.19.2</h3>
+<h3>Supported versions: 1.19, 1.19.1, 1.19.2, 1.19.3</h3>
 
 Turnstile Renewed is the remake of the Turnstile (https://dev.bukkit.org/projects/turnstile), which was made a while ago.
 
