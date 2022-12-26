@@ -9,8 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.Material;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.entity.Player;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.MultipleFacing;
+import org.bukkit.block.data.BlockData;
 
 
 
@@ -107,7 +109,19 @@ public class TurnstileCommand implements CommandExecutor {
                     TurnstileData new_data = new TurnstileData();
     
                     new_data.material = block.getType();
-    
+
+                    // Get blockdata
+                    BlockData block_data = block.getBlockData();
+                    
+                    // Get the fence direction and set the new data direction without casting BlockData to Directional
+                    MultipleFacing multipleFacing = (MultipleFacing) block_data;
+
+                    // Set the data values (north, east, south, west)
+                    new_data.direction.north = multipleFacing.hasFace(BlockFace.NORTH);
+                    new_data.direction.east = multipleFacing.hasFace(BlockFace.EAST);
+                    new_data.direction.south = multipleFacing.hasFace(BlockFace.SOUTH);
+                    new_data.direction.west = multipleFacing.hasFace(BlockFace.WEST);
+
                     new_data.coords.x = block.getX();
                     new_data.coords.y = block.getY();
                     new_data.coords.z = block.getZ();

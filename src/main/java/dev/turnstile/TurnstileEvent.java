@@ -5,8 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +13,10 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.material.Directional;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.MultipleFacing;
 
 // Listening to the player's interaction with the block
 
@@ -58,11 +60,25 @@ public class TurnstileEvent implements Listener {
             }
 
             final Material temp_block = block.getType();
+            final TurnstileData temp_data = data;
+            
             block.setType(Material.AIR);
+
             class CloseTurnstile implements Runnable {
                 @Override
                 public void run() {
                     block.setType(temp_block);
+
+                    // Get the fence direction and set the new data direction without casting BlockData to Directional
+                    MultipleFacing multipleFacing = (MultipleFacing) block.getBlockData();
+
+                    // Set the data values (north, east, south, west)
+                    if (temp_data.direction.north) multipleFacing.setFace(BlockFace.NORTH, true);
+                    if (temp_data.direction.east) multipleFacing.setFace(BlockFace.EAST, true);
+                    if (temp_data.direction.south) multipleFacing.setFace(BlockFace.SOUTH, true);
+                    if (temp_data.direction.west) multipleFacing.setFace(BlockFace.WEST, true);
+                    
+                    block.setBlockData(multipleFacing);
                 }
             }
             
