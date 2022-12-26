@@ -24,11 +24,20 @@ public class TurnstileData {
 
     public String command;
 
+    public class Direction {
+        public boolean north;
+        public boolean south;
+        public boolean east;
+        public boolean west;
+    }
+
     public class Coords {
         public int x;
         public int y;
         public int z;
     }
+
+    public Direction direction = new Direction();
 
     Coords coords = new Coords();
 }

@@ -23,6 +23,10 @@ public class TurnstileSave {
         TurnstileRenewed.config.set("turnstiles." + data.id + ".command", data.command);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".item.name", data.item);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".item.amount", data.item_amount);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.north", data.direction.north);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.south", data.direction.south);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.east", data.direction.east);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.west", data.direction.west);
 
         TurnstileRenewed.plugin.saveConfig();
 
@@ -63,6 +67,10 @@ public class TurnstileSave {
             data.command = TurnstileRenewed.config.getString("turnstiles." + key + ".command");
             data.item = TurnstileRenewed.config.getString("turnstiles." + key + ".item.name");
             data.item_amount = TurnstileRenewed.config.getInt("turnstiles." + key + ".item.amount");
+            data.direction.north = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.north");
+            data.direction.south = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.south");
+            data.direction.east = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.east");
+            data.direction.west = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.west");
 
             Block block = TurnstileRenewed.plugin.getServer().getWorld(data.world).getBlockAt(data.coords.x, data.coords.y, data.coords.z);
 
