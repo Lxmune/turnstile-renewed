@@ -80,8 +80,10 @@ public class TurnstileCommand implements CommandExecutor {
                 player.sendMessage("§7World: §e" + data.world);
                 player.sendMessage("§7Coords: §e" + data.coords.x + "," + data.coords.y + "," + data.coords.z);
                 player.sendMessage("§7Material: §e" + data.material.toString());
-                player.sendMessage("§7Command: §e" + data.command);
-                player.sendMessage("§7Item: §e" + data.item + " (" + data.item_amount + "x)");
+                if (data.command == null) player.sendMessage("§7Command: §eNone");
+                else player.sendMessage("§7Command: §e" + data.command);
+                if (data.item == null) player.sendMessage("§7Item: §eNone");
+                else player.sendMessage("§7Item: §e" + data.item + " (" + data.item_amount + "x)"); 
                 return true;
             }
             else
