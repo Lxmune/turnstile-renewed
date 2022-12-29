@@ -50,9 +50,6 @@ public class TurnstileRenewed extends JavaPlugin {
 
         messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
         
-        // Init
-        getLogger().log(Level.INFO, "The plugin has been enabled. Reminder that this plugin is still in development, so there might be unexpected bugs.");
-        
         // Registering the command executor
         this.getCommand("turnstile").setExecutor(new TurnstileCommand());
 
@@ -63,13 +60,19 @@ public class TurnstileRenewed extends JavaPlugin {
         config = TurnstileRenewed.plugin.getConfig();
 
         // Initializing the config
-        config.addDefault("next_id", 0);
+        config.addDefault("next_id", 1);
 
         stored_data = TurnstileSave.DataInit();
 
         if (stored_data == null) {
             getLogger().log(Level.INFO, "No data found, creating new data.");
             stored_data = new ArrayList<>();
+        }
+        else {
+            getLogger().log(Level.INFO, "Data found, loading data and spawning turnstiles.");
+            for (TurnstileData data : stored_data) {
+                TurnstileActions.SpawnAll();
+            }
         }
 
         System.out.printf("%d turnstiles found.\n", stored_data.size());
