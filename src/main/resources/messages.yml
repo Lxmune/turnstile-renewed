@@ -19,7 +19,7 @@ messages:
   usage-delay: "§cUsage: /turnstile delay <delay>"
   usage-command: "§cUsage: /turnstile command <command>"
   help-help: "§b/turnstile help §7- §fDisplay this help"
-  help-info: "§b/turnstile info §7- §fDisplay information about the plugin"
+  help-info: "§b/turnstile info §7- §fDisplay information about the turnstile"
   help-create: "§b/turnstile create §7- §fCreate a turnstile at your target block"
   help-remove: "§b/turnstile remove §7- §fRemove a turnstile at your target block"
   help-price: "§b/turnstile price §7- §fSet the price of a turnstile at your target block"
