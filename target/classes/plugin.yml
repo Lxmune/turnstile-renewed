@@ -1,9 +1,0 @@
-name: Turnstile
-version: "1.0"
-author: Lamune
-main: dev.turnstile.TurnstileRenewed
-api-version: 1.19
-commands:
-  turnstile:
-    description: Main command.
-    usage: /<command>
