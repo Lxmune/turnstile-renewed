@@ -115,7 +115,7 @@ public class TurnstileCommand implements CommandExecutor {
                     // Get blockdata
                     BlockData block_data = block.getBlockData();
                     
-                    // Get the fence direction and set the new data direction without casting BlockData to Directional
+                    // Get the fence direction and set the new data direction
                     MultipleFacing multipleFacing = (MultipleFacing) block_data;
 
                     // Set the data values (north, east, south, west)
