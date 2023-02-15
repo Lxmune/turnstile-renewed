@@ -21,8 +21,10 @@ public class TurnstileSave {
         TurnstileRenewed.config.set("turnstiles." + data.id + ".owner", data.owner);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".owner_name", data.owner_name);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".command", data.command);
-        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.name", data.item);
-        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.amount", data.item_amount);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.name", data.item.name);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.amount", data.item.amount);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.type", data.item.type);
+        TurnstileRenewed.config.set("turnstiles." + data.id + ".item.lore", data.item.lore);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.north", data.direction.north);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.south", data.direction.south);
         TurnstileRenewed.config.set("turnstiles." + data.id + ".direction.east", data.direction.east);
@@ -65,8 +67,12 @@ public class TurnstileSave {
             data.owner = TurnstileRenewed.config.getString("turnstiles." + key + ".owner");
             data.owner_name = TurnstileRenewed.config.getString("turnstiles." + key + ".owner_name");
             data.command = TurnstileRenewed.config.getString("turnstiles." + key + ".command");
-            data.item = TurnstileRenewed.config.getString("turnstiles." + key + ".item.name");
-            data.item_amount = TurnstileRenewed.config.getInt("turnstiles." + key + ".item.amount");
+            data.item.type = TurnstileRenewed.config.getString("turnstiles." + key + ".item.type");
+            data.item.amount = TurnstileRenewed.config.getInt("turnstiles." + key + ".item.amount");
+            data.item.name = TurnstileRenewed.config.getString("turnstiles." + key + ".item.name");
+            // Type mismatch: cannot convert from String to List<String>
+            // Fix:
+            data.item.lore = TurnstileRenewed.config.getStringList("turnstiles." + key + ".item.lore");
             data.direction.north = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.north");
             data.direction.south = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.south");
             data.direction.east = TurnstileRenewed.config.getBoolean("turnstiles." + key + ".direction.east");

@@ -2,6 +2,7 @@ package dev.turnstile;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -13,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 
 
@@ -83,7 +86,7 @@ public class TurnstileCommand implements CommandExecutor {
                 if (data.command == null) player.sendMessage("§7Command: §eNone");
                 else player.sendMessage("§7Command: §e" + data.command);
                 if (data.item == null) player.sendMessage("§7Item: §eNone");
-                else player.sendMessage("§7Item: §e" + data.item + " (" + data.item_amount + "x)"); 
+                else player.sendMessage("§7Item: §e" + data.item + " (" + data.item.amount + "x)"); 
                 return true;
             }
             else
@@ -265,12 +268,26 @@ public class TurnstileCommand implements CommandExecutor {
                 Material item = player.getInventory().getItemInMainHand().getType();
                 int item_amount = player.getInventory().getItemInMainHand().getAmount();
 
+                // Player item
+                ItemMeta custom_item = player.getInventory().getItemInMainHand().getItemMeta();
+
+                // Check name
+                String name = null;
+                if (custom_item != null) { name = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName(); };
+                if (name != null) data.item.name = name;
+
+                // Check lore
+                List<String> lore = null;
+                if (custom_item != null) { lore = player.getInventory().getItemInMainHand().getItemMeta().getLore(); };
+                if (lore != null) data.item.lore = lore;
+                else data.item.lore = null;
+
                 if (item == null || item == Material.AIR)
                 {
                     if (data.item != null)
                     {
-                        data.item = null;
-                        data.item_amount = 0;
+                        data.item.type = null;
+                        data.item.amount = 0;
                         TurnstileSave.Save(data);
                         sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-item-removal"));
                         return true;
@@ -280,8 +297,8 @@ public class TurnstileCommand implements CommandExecutor {
                 }
                 else
                 {
-                    data.item = item.toString();
-                    data.item_amount = item_amount;
+                    data.item.type = item.toString();
+                    data.item.amount = item_amount;
                     TurnstileSave.Save(data);
                     sender.sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("successful-item"));
                     return true;

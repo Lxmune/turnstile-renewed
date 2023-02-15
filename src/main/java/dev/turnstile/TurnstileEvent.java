@@ -1,10 +1,12 @@
 package dev.turnstile;
 
+import java.util.List;
+
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
+import org.bukkit.inventory.Inventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,15 +15,42 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.material.Directional;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.MultipleFacing;
 
 // Listening to the player's interaction with the block
 
 
 public class TurnstileEvent implements Listener {
+
+    public boolean checkItemType(ItemStack item, String type) {
+        if (item == null) return false;
+        if (type == null) return true;
+        if (item.getType().toString().equals(type)) return true;
+        return false;
+    }
+
+    public boolean checkItemName(ItemStack item, String name) {
+        if (item == null) return false;
+        if (name == null) return true;
+        if (item.getItemMeta().getDisplayName().equals(name)) return true;
+        return false;
+    }
+
+    public boolean checkItemAmount(ItemStack item, int amount) {
+        if (item == null) return false;
+        if (amount == 0) return true;
+        if (item.getAmount() >= amount) return true;
+        return false;
+    }
+
+    public boolean checkItemLore(ItemStack item, List<String> lore) {
+        if (item == null) return false;
+        if (lore == null) return true;
+        if (item.getItemMeta().getLore() == null) return false;
+        if (item.getItemMeta().getLore().equals(lore)) return true;
+        return false;
+    }
     
     @EventHandler()
     public void onEvent(final PlayerInteractEvent event) {
@@ -49,15 +78,28 @@ public class TurnstileEvent implements Listener {
                 }
             }
 
-            // Check if the player got the required item
-            if (data.item != null) {
-                if (event.getPlayer().getInventory().contains(new ItemStack(Material.valueOf(data.item), data.item_amount))) {
+            // Check if the player has the required item type
+            // If the data.item.type isn't null, that means that there is an item to check.
+            if (data.item.type != null) {
+                int found = 0;
+                Inventory inventory = player.getInventory();
+
+                for (ItemStack item : inventory.getContents()) {
+                    if (checkItemType(item, data.item.type) && 
+                    checkItemName(item, data.item.name) && 
+                    checkItemAmount(item, data.item.amount) &&
+                    checkItemLore(item, data.item.lore)) found = 1;
                 }
-                else {
-                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-item") + " (" + data.item_amount + "x " + data.item + ")");
+
+                if (found == 0) {
+                    event.getPlayer().sendMessage(TurnstileRenewed.prefix + TurnstileMessages.getMessage("no-item") +  " (" + data.item.amount + "x " + data.item.type + ")");
                     return;
                 }
             }
+
+
+
+            
 
             final Material temp_block = block.getType();
             final TurnstileData temp_data = data;
@@ -110,10 +152,29 @@ public class TurnstileEvent implements Listener {
             }
 
             // Check item
-            if (data.item != null) {
-                message += TurnstileMessages.getMessage("item-charged") + data.item_amount + "x " + data.item + "§f.";
-                // Remove the item
-                event.getPlayer().getInventory().removeItem(new ItemStack(Material.valueOf(data.item), data.item_amount));
+            if (data.item.type != null) {
+                message += TurnstileMessages.getMessage("item-charged") + data.item.amount + "x " + data.item.type + "§f.";
+                // Remove the item from the player's inventory
+                // If the item data has the same data as the item in the player's inventory, remove the item (type, amount, name, lore)
+                if (data.item.name != null && data.item.lore != null) {
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if (item != null && item.getType().toString().equals(data.item.type) && item.getItemMeta().getDisplayName().equals(data.item.name) && item.getItemMeta().getLore().equals(data.item.lore)) {
+                            item.setAmount(item.getAmount() - data.item.amount);
+                            break;
+                        }
+                    }
+                }
+
+
+                // If the item data doesn't have a name, remove the item with the type
+                else {
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if (item != null && item.getType().toString().equals(data.item.type)) {
+                            item.setAmount(item.getAmount() - data.item.amount);
+                            break;
+                        }
+                    }
+                }
             }
 
             // Send the message
