@@ -1,5 +1,5 @@
 
-<h2>🚫 Since I don't have a lot of time to dedicate to the plugin (+ loss of interest into the game), I will have to put an halt to the development plugin.</h2>
+<h2>🚫 Since I don't have a lot of time to dedicate to the plugin (+ loss of interest into the game), I will have to put an halt to the development plugin. Feel free to fork the plugin, I would be pleased to see new developments. Thank you for your continued support.</h2> 
 
 
 
