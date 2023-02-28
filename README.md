@@ -1,10 +1,13 @@
+
+<h2>🚫 Since I don't have a lot of time to dedicate to the plugin (+ loss of interest into the game), I will have to put an halt to the development plugin.</h2>
+
+
+
 # 🔒 Turnstile-Renewed : A remake of the Turnstile plugin
 
 <h3>Supported versions: 1.19, 1.19.1, 1.19.2, 1.19.3</h3>
 
-Turnstile Renewed is the remake of the Turnstile (https://dev.bukkit.org/projects/turnstile), which was made a while ago.
-
-Since the plugin is still in development, it is not recommended to use it in production.
+Turnstile Renewed is the remake of the Turnstile (https://dev.bukkit.org/projects/turnstile), which was made a while ago
 
 Feel free to contribute to the project by reporting issues and suggesting stuff.
 
